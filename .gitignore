@@ -38,3 +38,9 @@ transaction-logs
 secrets.yml
 .gradletasknamecache
 .sts4-cache
+### Example user template template
+### Example user template
+
+# IntelliJ project files
+out
+gen
