@@ -30,4 +30,9 @@ web容器类型包括下列三种类型
     3.将上一步的list根据注解优先级(AnnotationAwareOrderComparator)进行排序，
     将排序完的list设为初始器
 
+==== 1.3 设置监听器
+
+    key为org.springframework.context.ApplicationListener，
+    其余和设置初始器时一致
+
 
