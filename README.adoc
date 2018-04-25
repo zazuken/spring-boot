@@ -35,4 +35,8 @@ web容器类型包括下列三种类型
     key为org.springframework.context.ApplicationListener，
     其余和设置初始器时一致
 
+==== 1.4 推断应用入口类
+
+    构建一个运行时异常，获取异常栈信息中方法名为main的class对象作为应用入口类
+
 

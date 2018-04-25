@@ -245,6 +245,7 @@ public class SpringApplication {
 				ApplicationContextInitializer.class));
 		//设置监听器，和初始器一致，取当前类路径的META-INF/spring.factories下key为org.springframework.context.ApplicationListener的value
 		setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class));
+		//推断应用入口类
 		this.mainApplicationClass = deduceMainApplicationClass();
 	}
 
@@ -269,8 +270,14 @@ public class SpringApplication {
 		return WebApplicationType.SERVLET;
 	}
 
+	/**
+	 * 推断应用入口类
+	 *
+	 * @return
+	 */
 	private Class<?> deduceMainApplicationClass() {
 		try {
+			//构造一个运行时异常，获取异常栈信息，取得方法名为main的class对象
 			StackTraceElement[] stackTrace = new RuntimeException().getStackTrace();
 			for (StackTraceElement stackTraceElement : stackTrace) {
 				if ("main".equals(stackTraceElement.getMethodName())) {
