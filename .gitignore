@@ -1,8 +1,8 @@
 *#
-*.iml
+#*.iml
 *.ipr
 *.iws
-*.jar
+#*.jar
 *.sw?
 *~
 .#*
@@ -11,7 +11,7 @@
 .classpath
 .factorypath
 .gradle
-.idea
+#.idea
 .metadata
 .project
 .recommenders
@@ -19,7 +19,7 @@
 .springBeans
 /build
 /code
-MANIFEST.MF
+#MANIFEST.MF
 _site/
 activemq-data
 #bin
@@ -31,7 +31,7 @@ interpolated*.xml
 lib/
 manifest.yml
 overridedb.*
-settings.xml
+#settings.xml
 target
 transaction-logs
 .flattened-pom.xml
