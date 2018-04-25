@@ -3,3 +3,31 @@
 该项目在spring源码的基础上添加了部分中文测试注释，包括以下部分：
 
 == 1. spring boot 启动原理
+
+==== 1.1 推断web容器
+
+web容器类型包括下列三种类型
+
+    1.WebApplicationType.NONE:
+    程序不作为web应用启动，不启动内嵌web服务
+
+
+    2.WebApplicationType.SERVLET:
+    程序作为 基于servlet 的web应用启动，启动内嵌的servlet web服务
+
+    3.WebApplicationType.REACTIVE:
+    程序作为 反应式 的web应用启动，启动内嵌的反应式web服务
+
+==== 1.2 设置初始器
+
+    1.取出当前类路径下META-INF/spring.factories下
+    key为org.springframework.context.ApplicationContextInitializer的value，
+    将这些value集成名为names的set(防止重名引起的错误)
+
+    2.遍历names是否均为ApplicationContextInitializer的子类，
+    有不是的则报错，均是子类则为每个name创建实例，集成list
+
+    3.将上一步的list根据注解优先级(AnnotationAwareOrderComparator)进行排序，
+    将排序完的list设为初始器
+
+

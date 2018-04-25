@@ -240,6 +240,7 @@ public class SpringApplication {
 		this.primarySources = new LinkedHashSet<>(Arrays.asList(primarySources));
 		//推断web容器
 		this.webApplicationType = deduceWebApplicationType();
+		//设置初始化器，取出当前类路径的META-INF/spring.factories下key为org.springframework.context.ApplicationContextInitializer的value
 		setInitializers((Collection) getSpringFactoriesInstances(
 				ApplicationContextInitializer.class));
 		setListeners((Collection) getSpringFactoriesInstances(ApplicationListener.class));
@@ -403,14 +404,27 @@ public class SpringApplication {
 		return getSpringFactoriesInstances(type, new Class<?>[] {});
 	}
 
+	/**
+	 * 获取springFactories实例
+	 *
+	 * @param type 启动时入参为ApplicationContextInitializer.class
+	 * @param parameterTypes
+	 * @param args
+	 * @param <T>
+	 * @return
+	 */
 	private <T> Collection<T> getSpringFactoriesInstances(Class<T> type,
 			Class<?>[] parameterTypes, Object... args) {
+		//获取当前线程类加载器
 		ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-		// Use names and ensure unique to protect against duplicates
+		//使用set防止重复
+		// 从类路径的META-INF/spring.factories下读取相应配置文件，取出key为org.springframework.context.ApplicationContextInitializer的value
 		Set<String> names = new LinkedHashSet<>(
 				SpringFactoriesLoader.loadFactoryNames(type, classLoader));
+		//遍历names，判断每一个是否为ApplicationContextInitializer.class的子类，是则创建相关实例加入instances，否则报错
 		List<T> instances = createSpringFactoriesInstances(type, parameterTypes,
 				classLoader, args, names);
+		//根据注解优先级对instances进行排序
 		AnnotationAwareOrderComparator.sort(instances);
 		return instances;
 	}
