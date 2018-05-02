@@ -298,16 +298,22 @@ public class SpringApplication {
 	 * @return a running {@link ApplicationContext}
 	 */
 	public ConfigurableApplicationContext run(String... args) {
+		//计时工具
 		StopWatch stopWatch = new StopWatch();
 		stopWatch.start();
+
 		ConfigurableApplicationContext context = null;
 		Collection<SpringBootExceptionReporter> exceptionReporters = new ArrayList<>();
+		//设置系统属性java.awt.headless为true，即无图形化界面
 		configureHeadlessProperty();
+		//获取SpringApplicationRunListeners，并且立即调用
 		SpringApplicationRunListeners listeners = getRunListeners(args);
 		listeners.starting();
 		try {
+			//构建应用参数对象
 			ApplicationArguments applicationArguments = new DefaultApplicationArguments(
 					args);
+			//根据listeners和applicationArguments构建配置环境
 			ConfigurableEnvironment environment = prepareEnvironment(listeners,
 					applicationArguments);
 			configureIgnoreBeanInfo(environment);
@@ -343,10 +349,17 @@ public class SpringApplication {
 		return context;
 	}
 
+	/**
+	 * 根据 listeners 和 applicationArguments 构建配置环境对象
+	 *
+	 * @param listeners
+	 * @param applicationArguments
+	 * @return
+	 */
 	private ConfigurableEnvironment prepareEnvironment(
 			SpringApplicationRunListeners listeners,
 			ApplicationArguments applicationArguments) {
-		// Create and configure the environment
+		//获取或创建 配置环境
 		ConfigurableEnvironment environment = getOrCreateEnvironment();
 		configureEnvironment(environment, applicationArguments.getSourceArgs());
 		listeners.environmentPrepared(environment);
@@ -460,12 +473,15 @@ public class SpringApplication {
 	}
 
 	private ConfigurableEnvironment getOrCreateEnvironment() {
+	 	// 先获取this.environment,有则返回
 		if (this.environment != null) {
 			return this.environment;
 		}
+		//如果是 作为servlet启动的web应用程序，则返回 标准servlet环境
 		if (this.webApplicationType == WebApplicationType.SERVLET) {
 			return new StandardServletEnvironment();
 		}
+		//否则返回标准环境
 		return new StandardEnvironment();
 	}
 
@@ -534,6 +550,7 @@ public class SpringApplication {
 	}
 
 	private void configureIgnoreBeanInfo(ConfigurableEnvironment environment) {
+		//将系统属性spring.beaninfo.ignore设置为IGNORE_ALL_BEANINFO
 		if (System.getProperty(
 				CachedIntrospectionResults.IGNORE_BEANINFO_PROPERTY_NAME) == null) {
 			Boolean ignore = environment.getProperty("spring.beaninfo.ignore",
