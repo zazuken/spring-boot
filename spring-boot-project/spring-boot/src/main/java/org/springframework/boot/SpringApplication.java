@@ -318,12 +318,17 @@ public class SpringApplication {
 			//根据listeners和applicationArguments构建配置环境
 			ConfigurableEnvironment environment = prepareEnvironment(listeners,
 					applicationArguments);
+			//设置environment的spring.beaninfo.ignore为true
 			configureIgnoreBeanInfo(environment);
+			//打印banner，即启动时的springboot
 			Banner printedBanner = printBanner(environment);
+			//创建应用上下文 ConfigurableApplicationContext
 			context = createApplicationContext();
+			//获取异常报告
 			exceptionReporters = getSpringFactoriesInstances(
 					SpringBootExceptionReporter.class,
 					new Class[]{ConfigurableApplicationContext.class}, context);
+			//准备context
 			prepareContext(context, environment, listeners, applicationArguments,
 					printedBanner);
 			refreshContext(context);
@@ -551,11 +556,13 @@ public class SpringApplication {
 	}
 
 	private void configureIgnoreBeanInfo(ConfigurableEnvironment environment) {
-		//将系统属性spring.beaninfo.ignore设置为IGNORE_ALL_BEANINFO
+		//将系统属性spring.beaninfo.ignore设置为IGNORE_ALL_BEANINFO，即当启动时加载JavaBean时跳过查找BeanInfo实现类
 		if (System.getProperty(
 				CachedIntrospectionResults.IGNORE_BEANINFO_PROPERTY_NAME) == null) {
+			//获取配置环境的spring.beaninfo.ignore，默认为true
 			Boolean ignore = environment.getProperty("spring.beaninfo.ignore",
 					Boolean.class, Boolean.TRUE);
+			//设置系统的spring.beaninfo.ignore属性为ignore
 			System.setProperty(CachedIntrospectionResults.IGNORE_BEANINFO_PROPERTY_NAME,
 					ignore.toString());
 		}
@@ -589,6 +596,8 @@ public class SpringApplication {
 	}
 
 	/**
+	 * 根据webApplicationType实例化对应的配置应用上下文
+	 * <p>
 	 * Strategy method used to create the {@link ApplicationContext}. By default this
 	 * method will respect any explicitly set application context or application context
 	 * class before falling back to a suitable default.
